@@ -3,7 +3,11 @@
 #include <time.h>
 
 int main() {
-    setenv("TZ", "PST8", 1);
+    if (setenv("TZ", "PST8PDT", 1) != 0) {
+        perror("error on setting tz env");
+        return 1;
+    }
+    
     tzset();
 
     time_t now = time(NULL);
@@ -15,4 +19,4 @@ int main() {
     printf("California date: %s\n", buffer);
 
     return 0;
-} 
+}
