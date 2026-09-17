@@ -3,7 +3,7 @@
 #include <time.h>
 
 int main() {
-    if (setenv("TZ", "PST8PDT", 1) != 0) {
+    if (setenv("TZ", "America/Los_Angeles", 1) != 0) {
         perror("error on setting tz env");
         return 1;
     }
