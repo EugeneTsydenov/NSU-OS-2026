@@ -37,7 +37,8 @@ void list_push(List *list, const char *str) {
 }
 
 void list_print(const List *list) {
-    for (Node *n = list->head; n; n = n->next)
+    Node *n;
+    for (n = list->head; n; n = n->next)
         puts(n->value);
 }
 
