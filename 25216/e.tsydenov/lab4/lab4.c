@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define BUF_SIZE 4096
+#define INITIAL_CAPACITY 64
 
 typedef struct Node {
     char *value;
@@ -54,20 +54,50 @@ void list_clear(List *list) {
     list->size = 0;
 }
 
+char *read_line(void) {
+    size_t capacity = INITIAL_CAPACITY;
+    size_t len = 0;
+    char *buf = malloc(capacity);
+    if (!buf) return NULL;
+
+    while (fgets(buf + len, (int)(capacity - len), stdin) != NULL) {
+        len += strlen(buf + len);
+
+        if (len > 0 && buf[len - 1] == '\n') {
+            buf[len - 1] = '\0';
+            return buf;
+        }
+
+        capacity *= 2;
+        char *new_buf = realloc(buf, capacity);
+        if (!new_buf) {
+            free(buf);
+            return NULL;
+        }
+        buf = new_buf;
+    }
+
+    if (len == 0) {
+        free(buf);
+        return NULL;
+    }
+    return buf;
+}
+
 int main(void) {
     List list;
     list_init(&list);
 
-    char line[BUF_SIZE];
-    while (fgets(line, sizeof(line), stdin) != NULL) {
-        if (line[0] == '.')
+    char *line;
+    while ((line = read_line()) != NULL) {
+        int len = strlen(line);
+        if (line[0] == '.' && (len == 1 || (len == 2 && line[1] == '\n'))) {
+            free(line);
             break;
-
-        size_t len = strlen(line);
-        if (len > 0 && line[len - 1] == '\n')
-            line[len - 1] = '\0';
+        }
 
         list_push(&list, line);
+        free(line);
     }
 
     list_print(&list);
