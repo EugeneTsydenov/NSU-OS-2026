@@ -23,7 +23,8 @@ int main() {
   printf("Continue? (y/n): ");
   fflush(stdout);
 
-  int answer = getchar();
+  char answer;
+  read(STDIN_FILENO, &answer, 1);
 
   if (tcsetattr(STDIN_FILENO, TCSANOW, &old_term) == -1) {
     perror("tcsetattr");
